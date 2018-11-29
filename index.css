@@ -1,0 +1,46 @@
+.navbar-light {
+    margin-bottom: 2vh;
+    background-color: rgba(241, 235, 214, 0.336);
+}
+
+#singlePageContainer {}
+
+.galleryWrapper {
+    max-height: Calc(25vh + 200px);
+    max-width: Calc(45vw + 100px);
+    align-content: center;
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 100px;
+}
+
+.galleryWrapper h2 {
+    text-align: center;
+}
+
+.galleryWrapper .image {
+    max-height: Calc(15vh + 230px);
+    max-width: Calc(45vw + 100px);
+    position: relative;
+    margin: 0 auto;
+    align-self: center;
+    padding: 0;
+    overflow: hidden;
+}
+
+.galleryWrapper p {
+    text-align: left;
+}
+
+iframe.gallery {
+    height: 133.33%;
+    width: 133.33%;
+    /* 133 accounts for the miscaling  */
+    -ms-zoom: 0.75;
+    -moz-transform: scale(0.75);
+    -moz-transform-origin: 0 0;
+    -o-transform: scale(0.75);
+    -o-transform-origin: 0 0;
+    -webkit-transform: scale(0.75);
+    -webkit-transform-origin: 0 0;
+}
