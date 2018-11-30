@@ -2,14 +2,14 @@ import { trivial, module } from "./trivial.js/framework.js"
 import { singlePageLink } from "./trivial.js/singlePageModules.js"
 
 const pageBreak = new module('page-break', ``, ``)
-pageBreak.setHTMLSource('/trivMods/pageBreak.htm')
+pageBreak.setHTMLSource('trivMods/pageBreak.htm')
 pageBreak.init()
 
 const pSmall = new module('p-small', ``, ``)
-pSmall.setHTMLSource('/trivMods/pSmall.htm')
+pSmall.setHTMLSource('trivMods/pSmall.htm')
 
 const galleryMod = new module('gallery', ``, ``)
-galleryMod.setHTMLSource('/trivMods/gallery.htm')
+galleryMod.setHTMLSource('trivMods/gallery.htm')
 galleryMod.init()
 
 trivial.updatingModule([pSmall, pageBreak])
