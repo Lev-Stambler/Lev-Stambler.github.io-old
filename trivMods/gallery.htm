@@ -1,17 +1,22 @@
-<div id="galleryCount<(count)>" class='galleryWrapper col-lg-12 span12'>
-    <h2 class = "col-sm-12"><{title}></h2>
-    <div class='image col-lg-12'></div>
-    <p class = "col-sm-12">
-        <{descript}>
-    </p>
+<div id="galleryCount<(count)>" class="galleryWrapper col-lg-12 span12">
+  <h2 class="col-sm-12"><{title}></h2>
+  <div class="image col-lg-12"></div>
+  <p class="col-sm-12">
+    <{descript}>
+    <!-- <span style="display: inline; text-align: left;"> -->
+        <span id="possibleLinkGallerey<(count)>"></span>
+    <!-- </div> -->
+  </p>
 </div>
 <script>
-    var galImage = document.querySelector('#galleryCount<(count)> .image');
-    galImage.innerHTML = ''
-    if('<{iframe}>' !== '') {
-        galImage.innerHTML += `<iframe class="gallery span12" src="<{iframe}>">`
-    }
-    else if('<{src}>' !== '') {
-        galImage.innerHTML += `<img class="gallery span12" src="<{src}>">`
-    } 
+  var galImage = document.querySelector("#galleryCount<(count)> .image");
+  galImage.innerHTML = "";
+  if ("<{iframe}>" !== "") {
+    galImage.innerHTML += `<iframe class="gallery span12" src="<{iframe}>">`;
+  } else if ("<{src}>" !== "") {
+    galImage.innerHTML += `<img class="gallery span12" src="<{src}>">`;
+  }
+  if("<{link}>" !== "") {
+    document.querySelector("#possibleLinkGallerey<(count)>").innerHTML = '<a href="<{link}>">this link.</a>';
+  }
 </script>

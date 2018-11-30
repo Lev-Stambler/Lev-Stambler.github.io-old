@@ -386,7 +386,7 @@ var trivial = {
         let i = 0;
         function loop() {
             setTimeout(function () {
-                console.log(trivial.classes)
+                // console.log(trivial.classes)
                 trivial.classes[keyArr[i]].init();
                 i++;
                 if (i < keyArr.length) {

@@ -1,17 +1,38 @@
 .navbar-light {
     margin-bottom: 2vh;
-    background-color: rgba(241, 235, 214, 0.336);
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+}
+
+.jumbotron {
+    background-color: rgba(248, 248, 248, 0.521);
+}
+
+a-sp a {
+    color:#fff4d9;
 }
 
 #singlePageContainer {}
 
+.pageBreak {
+    height: 1px;
+    width: 800px;
+    max-width: 70%;
+    background-color: black;
+    margin: 0 auto;   
+    margin-bottom: 35px; 
+}
+
 .galleryWrapper {
-    max-height: Calc(25vh + 200px);
-    max-width: Calc(45vw + 100px);
+    /* max-height: Calc(25vh + 200px); */
+    padding: 5 20px;
+    max-width: 40vw;
     align-content: center;
     text-align: center;
     margin: 0 auto;
-    margin-bottom: 100px;
+    margin-bottom: 25px;
+    /* background-color:#fff4d9; */
+    border-radius: 5px;
 }
 
 .galleryWrapper h2 {
@@ -19,9 +40,16 @@
 }
 
 .galleryWrapper .image {
-    max-height: Calc(15vh + 230px);
-    max-width: Calc(45vw + 100px);
-    position: relative;
+    background-color: black;
+
+    max-width: 50%;
+    max-height: 30%;
+    
+    max-width: 40vw;
+    max-height: 25vw;
+    
+    border-style: solid;
+    border-width: 2px;
     margin: 0 auto;
     align-self: center;
     padding: 0;
@@ -32,7 +60,13 @@
     text-align: left;
 }
 
+img.gallery {
+    max-width: 100%;
+    max-height: 100%;
+}
+
 iframe.gallery {
+    border-width: 0px;
     height: 133.33%;
     width: 133.33%;
     /* 133 accounts for the miscaling  */

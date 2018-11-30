@@ -1,6 +1,9 @@
 import { trivial, module } from "./trivial.js/framework.js"
 import { singlePageLink } from "./trivial.js/singlePageModules.js"
 
+const pageBreak = new module('page-break', ``, ``)
+pageBreak.setHTMLSource('/trivMods/pageBreak.htm')
+pageBreak.init()
 
 const pSmall = new module('p-small', ``, ``)
 pSmall.setHTMLSource('/trivMods/pSmall.htm')
@@ -9,7 +12,7 @@ const galleryMod = new module('gallery', ``, ``)
 galleryMod.setHTMLSource('/trivMods/gallery.htm')
 galleryMod.init()
 
-trivial.updatingModule([pSmall])
+trivial.updatingModule([pSmall, pageBreak])
 
 trivial.updateDOM()
 
@@ -19,11 +22,12 @@ aSPModule.addEvent('click', () => {
     $('#<{activeId}>').addClass('active')
     trivial.initAll()
     trivial.updateDOM()
+    location.hash ='#<{activeId}>'
 })
 
 function loadPageFromUrl(){
     const loc = location.hash.replace('#', '')
-    $(`#${loc}Link a-sp .moduleOuterSpanTaga-sp`).click()
+    $(`#${loc} a-sp .moduleOuterSpanTaga-sp`).click()
 }
 
 var mobilecheck = function() {
