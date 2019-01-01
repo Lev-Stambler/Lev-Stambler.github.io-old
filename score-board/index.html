@@ -132,8 +132,8 @@
         if (team === teamNames.team1) pointVal.team1 += pointValue
         else pointVal.team2 += pointValue
         updatePoints()
-        $("#pointVal").val() = 0
-      });
+        $("#pointVal").val(0)
+      })
 
       $(".teamSubmit").click(e => {
         e.preventDefault()
