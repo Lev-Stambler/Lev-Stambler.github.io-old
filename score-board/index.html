@@ -124,41 +124,42 @@
       };
 
       $(".finalSubmit").click(e => {
-        e.preventDefault();
+        e.preventDefault()
         const pointValue = parseInt($("#pointVal").val())
           ? parseInt($("#pointVal").val())
           : 0
-        const team = $("#teamSelector").val();
-        if (team === teamNames.team1) pointVal.team1 += pointValue;
-        else pointVal.team2 += pointValue;
-        updatePoints();
+        const team = $("#teamSelector").val()
+        if (team === teamNames.team1) pointVal.team1 += pointValue
+        else pointVal.team2 += pointValue
+        updatePoints()
+        $("#pointVal").val() = 0
       });
 
       $(".teamSubmit").click(e => {
-        e.preventDefault();
-        const newteam1NewName = $("#team1NewName").val();
-        const newteam2NewName = $("#team2NewName").val();
-        teamNames.team1 = newteam1NewName ? newteam1NewName : teamNames.team1;
-        teamNames.team2 = newteam2NewName ? newteam2NewName : teamNames.team2;
-        updateTeamNames();
-      });
+        e.preventDefault()
+        const newteam1NewName = $("#team1NewName").val()
+        const newteam2NewName = $("#team2NewName").val()
+        teamNames.team1 = newteam1NewName ? newteam1NewName : teamNames.team1
+        teamNames.team2 = newteam2NewName ? newteam2NewName : teamNames.team2
+        updateTeamNames()
+      })
 
       function updatePoints() {
-        $("#totalPointsTeam1").text(pointVal.team1);
-        $("#totalPointsTeam2").text(pointVal.team2);
+        $("#totalPointsTeam1").text(pointVal.team1)
+        $("#totalPointsTeam2").text(pointVal.team2)
       }
 
       function updateTeamNames() {
-        $("#team1Name").text(teamNames.team1);
-        $("#team2Name").text(teamNames.team2);
-        $("#optionTeam1").text(teamNames.team1);
-        $("#optionTeam2").text(teamNames.team2);
+        $("#team1Name").text(teamNames.team1)
+        $("#team2Name").text(teamNames.team2)
+        $("#optionTeam1").text(teamNames.team1)
+        $("#optionTeam2").text(teamNames.team2)
       }
 
       if (
         /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)
       ) {
-        $("body").css("zoom", "1.2");
+        $("body").css("zoom", "1.2")
       }
     </script>
   </body>
