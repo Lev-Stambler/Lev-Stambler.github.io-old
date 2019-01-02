@@ -49,7 +49,10 @@ var mobilecheck = function() {
     )
       check = true;
   })(navigator.userAgent || navigator.vendor || window.opera);
-  return check;
+  if(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+    check = true
+  }
+  return check
 };
 
 if (mobilecheck())
