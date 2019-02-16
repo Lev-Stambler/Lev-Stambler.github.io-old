@@ -9,6 +9,9 @@
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <style>
+      body {
+        overflow: hidden;
+      }
       h1 {
         text-align: center;
         margin-bottom: 25px;
@@ -18,6 +21,32 @@
       }
       thead tbody {
         width: 50%;
+      }
+      .invertRev:hover {
+        border-radius: 8px;
+        animation: flipInvert;
+        animation-duration: 2s;
+        animation-delay: 0s;
+      }
+      @keyframes flipInvert {
+        0% {
+          cursor: pointer;
+          transform: rotateX(0deg);
+          background-color: transparent;
+          color: black;
+        }
+        50% {
+          cursor: pointer;
+          transform: rotateX(360deg);
+          background-color: rgb(83, 0, 0);
+          color: white;
+        }
+        100% {
+          transform: rotateX(720deg);
+          background-color: transparent;
+          color: black;
+          cursor: text;
+        }
       }
     </style>
   </head>
@@ -53,10 +82,34 @@
           >
             Change Team Names
           </button>
+          <!-- Mp3 player below -->
+          <br />
+          <audio
+            src="Jeopardy.mp3"
+            type="audio/mpeg"
+            id="JeopardyTheme"
+          ></audio>
+          Jeopardy Theme Controls:
+          <button
+            type="button"
+            class="btn btn-default"
+            onclick="document.querySelector('#JeopardyTheme').play()"
+          >
+            Play
+          </button>
+          <button
+            type="button"
+            class="btn btn-default"
+            onclick="document.querySelector('#JeopardyTheme').pause(); document.querySelector('#JeopardyTheme').currentTime = 0"
+          >
+            Stop
+          </button>
         </form>
         <!-- btn is for opening change team name modal -->
         <div class="jumbotron" style="padding: 100px; margin: 30px 100px;">
-          <h1>Score Board</h1>
+          <div class="invertRev">
+            <h1>Score Board</h1>
+          </div>
           <table class="table">
             <thead>
               <tr>
@@ -124,42 +177,42 @@
       };
 
       $(".finalSubmit").click(e => {
-        e.preventDefault()
+        e.preventDefault();
         const pointValue = parseInt($("#pointVal").val())
           ? parseInt($("#pointVal").val())
-          : 0
-        const team = $("#teamSelector").val()
-        if (team === teamNames.team1) pointVal.team1 += pointValue
-        else pointVal.team2 += pointValue
-        updatePoints()
-        $("#pointVal").val(0)
-      })
+          : 0;
+        const team = $("#teamSelector").val();
+        if (team === teamNames.team1) pointVal.team1 += pointValue;
+        else pointVal.team2 += pointValue;
+        updatePoints();
+        $("#pointVal").val("");
+      });
 
       $(".teamSubmit").click(e => {
-        e.preventDefault()
-        const newteam1NewName = $("#team1NewName").val()
-        const newteam2NewName = $("#team2NewName").val()
-        teamNames.team1 = newteam1NewName ? newteam1NewName : teamNames.team1
-        teamNames.team2 = newteam2NewName ? newteam2NewName : teamNames.team2
-        updateTeamNames()
-      })
+        e.preventDefault();
+        const newteam1NewName = $("#team1NewName").val();
+        const newteam2NewName = $("#team2NewName").val();
+        teamNames.team1 = newteam1NewName ? newteam1NewName : teamNames.team1;
+        teamNames.team2 = newteam2NewName ? newteam2NewName : teamNames.team2;
+        updateTeamNames();
+      });
 
       function updatePoints() {
-        $("#totalPointsTeam1").text(pointVal.team1)
-        $("#totalPointsTeam2").text(pointVal.team2)
+        $("#totalPointsTeam1").text(pointVal.team1);
+        $("#totalPointsTeam2").text(pointVal.team2);
       }
 
       function updateTeamNames() {
-        $("#team1Name").text(teamNames.team1)
-        $("#team2Name").text(teamNames.team2)
-        $("#optionTeam1").text(teamNames.team1)
-        $("#optionTeam2").text(teamNames.team2)
+        $("#team1Name").text(teamNames.team1);
+        $("#team2Name").text(teamNames.team2);
+        $("#optionTeam1").text(teamNames.team1);
+        $("#optionTeam2").text(teamNames.team2);
       }
 
       if (
         /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)
       ) {
-        $("body").css("zoom", "1.2")
+        $("body").css("zoom", "1.2");
       }
     </script>
   </body>
