@@ -42,3 +42,4 @@
 ### Error correcting code
 - Repetition code: have Alice repeat each symbol k + 1 times if there are erasures. Send 2k + 1 times if there is no erasure. Then, whichever has the majority of consensus, then thats the answer
 - Say Alice's message is d + 1. Then, Alice thinks of her symbols as a degree-d polynomial. Then, you can send d + k + 1 many points on the polynomial if there is an erasure. (Reed-Solomon encoding). The polynomial can be recovered from d + 1 points with Lagrange Interpolation.
+- How about corruption? Send d + 2k + 1. There are at least d + k + 1 correct values. Bob doesn't know which are correct though. But, then there is only one polynomial which disagrees with at most k positions.
