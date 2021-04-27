@@ -43,3 +43,22 @@
 - Repetition code: have Alice repeat each symbol k + 1 times if there are erasures. Send 2k + 1 times if there is no erasure. Then, whichever has the majority of consensus, then thats the answer
 - Say Alice's message is d + 1. Then, Alice thinks of her symbols as a degree-d polynomial. Then, you can send d + k + 1 many points on the polynomial if there is an erasure. (Reed-Solomon encoding). The polynomial can be recovered from d + 1 points with Lagrange Interpolation.
 - How about corruption? Send d + 2k + 1. There are at least d + k + 1 correct values. Bob doesn't know which are correct though. But, then there is only one polynomial which disagrees with at most k positions.
+
+## Interactive Proofs
+[Lecture 1](https://youtu.be/sSf4rHdNsRM), [Lecture 2](https://youtu.be/H-PVVIQHhok), [Lecture 3](https://youtu.be/yd3fNKYSfOY)
+
+### Lecture 1
+- There is a verifier and a prover. The prover wants to convince the verifier that $x \in A$ where A is a language in NP.
+- Completeness and soundness need to be satisfied (i.e. A has to be in NP)
+- Interaction + Randomization could be used to verify that the prover actually knows something
+- The Graph Isomorphism Problem.
+  - Given two graphs, are they isomorphic? This problem is in NP, the proof would be a mapping between vertices
+  - Nonisomorphism in NP? No one knows
+  - But, nonisomorphism can be used w/ interactive proofs
+- IP:
+  - A language is in the class IP if there is a probabilistic poly-time verifier
+  - There is a computationally unbounded Prover
+  - Requires completeness and soundness
+- Fun fact! NP is a subset of IP
+- Any complement of NP is also in IP
+- Theorem: IP = PSPACE (anything that is bounded by pspace to compute)
