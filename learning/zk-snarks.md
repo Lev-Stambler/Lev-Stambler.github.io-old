@@ -153,7 +153,7 @@ $B(i)$ =
 
 $C(i)$ = 
 
-### Reality check, why are we doing this?
+### Checking s with QAP
 Remember our solution vector s? Lets use it again.
 So, take $s . A(i) * s . B(i) - s . C(i)$. Say you have n gates. If for i = 0 to n - 1, $s . A(i) * s . B(i) - s . C(i)$ = 0, then s must satisfy all the constraints! Don't believe me?? Let's do a quick proof
 <details>
@@ -173,3 +173,11 @@ So, for our example TODO:
 </summary>
   TODO:
 </details>
+
+### Reality check, why are we doing this?
+<!-- TODO: unsure -->
+Okay, we can prove computation now! Imagine that you are given a set a polynomial, Y(x), you can then turn that polynomial into R1CS constraints and then into QAP form giving, A(i), B(i), C(i). Now, if you can provide t(i) and an h(i) for some x, then a verifier could check that h(i) = t(i) / Z(i). Wait, it feels like a prover could fake a proof though? Well yeah, and to get around this, we will need some cryptography.
+
+## Cryptography
+
+There is a lot going on here, so this section will be more of an overview
