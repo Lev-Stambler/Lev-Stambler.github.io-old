@@ -1,8 +1,10 @@
 # ZK Snarks
+<!-- https://medium.com/@VitalikButerin/quadratic-arithmetic-programs-from-zero-to-hero-f6d558cea649 -->
+<!-- https://medium.com/@VitalikButerin/exploring-elliptic-curve-pairings-c73c1864e627 -->
 
 ### Preamble
 
-## 1. What is ZK (Zero Knowledge) Anyways?
+## 1. What is a ZK (Zero Knowledge Succinct...) Anyways?
 
 ## 2. Transforming the input
 ### Code to polynomials
@@ -95,4 +97,79 @@ So, an example could be s = [1 2 79 4 48 52]. So x = 2, out = 79, tmp1 = 4, tmp2
 
 ### R1CS to QAP
 
-## 3. 
+Now we have to take the R1CS and convert it to QAP form (TODO: defn).
+
+How you may ask? Lagrange interpolation!!
+
+<details>
+  <summary>What's Lagrange interpolation</summary>
+  TODO: video here
+</details>
+
+<!-- TODO: thm name -->
+In short, the following detail of polynomials will be used. Given n points, a polynomial of degree $n + 1$ can be constructed such that the n points are all contained within the $n + 1$ degree polynomial
+
+<details>
+  A short example
+  TODO:
+</details>
+Recall the following set of vectors.
+A = [
+  [0  1 0 0 0 0],
+  [0  0 0 3 0 0],
+  [0  0 0 1 1 0],
+  [21 0 0 0 0 1]
+]
+B = [
+  [0 1 0 0 0 0],
+  [0 0 0 1 0 0],
+  [1 0 0 0 0 0],
+  [1 0 0 0 0 0],
+]
+C = [
+  [0 0 0 1 0 0],
+  [0 0 0 0 1 0],
+  [0 0 0 0 0 1],
+  [0 0 1 0 0 0]
+]
+
+Our goal now is to make a set of polynomials $A(i)$ = [$A_0(i), A_1(i), A_2(i), A_3(i)]$,
+$B(i)$ = $B_0(i), B_1(i), B_2(i), B_3(i)$, $C(i)$ = $[C_0(i), C_1(i), C_2(i), C_3(i)]$ such that A(i) gives the ith vector in A, B(i) gives the ith vector in B, C(i) gives the ith vector in C. So, A(0) for example, gives [0 1 0 0 0 0] and C(2) = [0 0 0 0 1 0]
+
+We can use Lagrange interpolation to create all the $A_k(i), B_k(i), C_k(i)$. 
+
+Using lagrange interpolation, we get that $A_0(i) = i$ TODO:!!!!. Lets represent it as a vector instead with coefficients in ascending order []
+
+<details>
+  <summary>Stepping through Lagrange interpolation</summary>
+  TODO:
+</details>
+
+Now, lets do the same for all equations, this gives us the following set of vectors representing each polynomial
+
+$A(i)$ = 
+
+$B(i)$ = 
+
+$C(i)$ = 
+
+### Reality check, why are we doing this?
+Remember our solution vector s? Lets use it again.
+So, take $s . A(i) * s . B(i) - s . C(i)$. Say you have n gates. If for i = 0 to n - 1, $s . A(i) * s . B(i) - s . C(i)$ = 0, then s must satisfy all the constraints! Don't believe me?? Let's do a quick proof
+<details>
+  <summary>Proofing the dot product equals to 0 iff s satisfies the constraints</summary>
+  TODO:
+</details>
+
+Let t(i) = $s . A(i) * s . B(i) - s . C(i)$. In a real Snark, we may have ___ number of gates. So, we are not going to check t(i) for all 0 to XXXXXX! What do we do instead? We take some polynomial Z, and check if t evenly divides Z. (i.e. there is no remainder). We define Z(i) = i * (i - 1) * (i - 3) ... (i - (n - 1)). Basically, Z(i) is zero for all 0 to n - 1.
+
+Let h(i) = t(i) / Z(i).
+
+So, for our example TODO:
+
+<details>
+<summary>
+  Polynomial division, a quick review
+</summary>
+  TODO:
+</details>
