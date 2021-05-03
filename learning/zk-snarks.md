@@ -32,9 +32,11 @@ Take a second to understand the above example. We will be coming back to this ex
 ### Polynomials to R1CS
 R1CS, or rank 1 constraint systems, are a group of three integer vectors, call them (**a**, **b**, **c**) with a solution **s**. Think of it like a system of equations where **a** . **s** * **b** . **s** = **c** . **s** where . represents the dot product operation. The size of a, b, c, and s are all the same. The lengths equal the total number of variables in the system + 2. The + 2 comes from two added dummy variables, a ~one variable (set to 1) and an ~out variable. Each gate gets its own rank 1 constraint. But, the **s** is the same for all the R1CSs. Now, lets give some meaning to these vectors. Let each index i in the vector map to some variable we use.
 
+
 <details><summary>Why the ~one?</summary>
 TODO:
 </details>
+<br />
 
 Let's say that position 0 maps to ~one, position 1 to x, and so on. So, the vector mapping would look like:
 [~one, x, ~out, tmp1, tmp2, tmp3]. So, the vector [1, 2, 3, 4, 5, 6] tells us that TODO:
@@ -42,27 +44,43 @@ Let's say that position 0 maps to ~one, position 1 to x, and so on. So, the vect
   <summary>Just a standard</summary>
   Its normal to just have ~one be in the 0th position, x in the 1st, and ~out in the 2nd.
 </details>
+<br />
 
 
 Lets take a look at the example now
-$$ tmp1 = x * x $$ gets the following constraint
+$ tmp1 = x * x $ gets the following constraint
 a = [0 1 0 0 0 0]
 b = [0 1 0 0 0 0]
 c = [0 0 0 1 0 0].
 What does this mean? It means that now s . a * s . b = s . c, and because the 1st index of the solution vector s corresponds to x, and the 3rd index corresponds to tmp1, the above equation **constrains** s such that x * x = tmp1
 
-$$ tmp2 = (3 * tmp1) * tmp1 $$
+$tmp2 = (3 * tmp1) * tmp1$
+<br />
 a = [0 0 0 3 0 0]
+<br />
 b = [0 0 0 1 0 0]
+<br />
 c = [0 0 0 0 1 0].
-$$ tmp3 = tmp1 + tmp2 $$
+<br />
+<br />
+$tmp3 = tmp1 + tmp2$
+<br />
 a = [0 0 0 1 1 0]
+<br />
 b = [1 0 0 0 0 0]
+<br />
 c = [0 0 0 0 0 1].
-$$ ~out = tmp3 + 27 $$
+<br />
+<br />
+$~out = tmp3 + 27$
+<br />
 a = [21 0 0 0 0 1]
+<br />
 b = [1  0 0 0 0 0]
+<br />
 c = [0  0 1 0 0 0].
+<br />
+<br />
 The last two looks a little weird huh? That's because the dot product of a . s performs the additions. Then, the multiplication with b . s is just an identity multiplication because s = [1 ? ? ? ? ?] and b = [1 0 0 0 0 0]. So b . s = 1.
 
 
@@ -178,6 +196,64 @@ So, for our example TODO:
 <!-- TODO: unsure -->
 Okay, we can prove computation now! Imagine that you are given a set a polynomial, Y(x), you can then turn that polynomial into R1CS constraints and then into QAP form giving, A(i), B(i), C(i). Now, if you can provide t(i) and an h(i) for some x, then a verifier could check that h(i) = t(i) / Z(i). Wait, it feels like a prover could fake a proof though? Well yeah, and to get around this, we will need some cryptography.
 
-## Cryptography
+## Hiding, cryptography and making this a reality
+Take hh(X), let hh be a one way function. Also, let say that hh(X) supports addition and multiplication. So, hh(a * X + b * Y) = a * hh(X) + b * hh(Z).
 
-There is a lot going on here, so this section will be more of an overview
+Now, take R = hh(t(P)) = hh(A(P) * B(P) - C(P)) for some point p. Then, R / hh(Z(P)) = hh(H(P)). So, if we can provide some hh(H(P)) for a set of points which satisfy equal R / hh(Z(P)) we can show that we know H(P) at point without actually revealing H(P). (remember hh hides the values!).
+
+Here is the thing though, if the prover knows what P is, the prover can just fake an H(P) which satisfies the constraints only for that one point. So, the prover can't know what P is. Wait, then how can the prover calculate hh(H(P))? Patience, time will tell.
+
+First, lets go over the concept of a trusted setup. A trusted setup is TODO:
+In the trusted setup, a random point P is chosen and then discarded forever. What is kept though is the following calculations: hh(1), hh(P), hh($P^2$), ..., hh($P^{n - 1}$) where n is the number of constraints. These values are made available to all.
+
+<details>
+  <summary>Just for fun: ZCash's trusted setup ceremony</summary>
+  TODO:
+</details>
+
+### Knowledge of coefficient
+Let A'(i) = s * A(i)
+Let B'(i) = s * B(i)
+Let C'(i) = s * C(i)
+Let $K'_k(i)$ = s * [$K_{0}(i)$ $K_{1}(i)$ ... $K_{n - 1}(i)$] where each $K_k(i)$ = $A_k(i) + B_k(i) + C_k(i)$. So, for our example, TODO:
+And, let K'(i) = A'(i) + B'(i) + C'(i)
+
+Then, hh(K'(i)) = hh(A'(i)) + hh(B'(i)) + hh(C'(i)).
+
+Okay okay, now to introduce one more idea. Take B = u * P. Then, hh(B) = hh(u * P). 
+Then, for some F, R where hh(F) = hh(u * R). So then for some q, q * hh(B) = hh(F) = q * hh(u * P) = hh(u * R) = hh(u) * hh(R). Then, the only way to get hh(F) and hh(R) is to multiply hh(B) * q and hh(P) * q. 
+
+Lets come back to A'(P). Let Y1 = hh(A'(P)) and Y2 = hh (u * A'(P)). Then, if Y2 = u * Y1, you know that the same A'(P) was indeed used in calculating both Y1 and Y2. TODO: proof
+
+
+Take Y = hh(K'(i)) and Y0 = hh($s_0$ * $K_0$), Y1 = ($s_{1}$ * $K_1$), ... $Y_{n - 1}$ = ($s_{n - 1}$ * $K_{n - 1}. 
+
+So now what? You can use the above fact to prove that if Y = Y0 + Y1 + ... + $Y_{n - 1}$, then the same coefficients $s_1, s_2, ..., s_{n -1}$ were used n calculating both K'(i) and all the $Y_k$s! So, all the same s was used in calculating all the A'(i), B'(i), and C'(i)
+
+TODO: Not convinced? Lets look at a small example
+
+### An aside, properties of hh
+
+Not to get to involved with the hiding function, just know this.
+
+hh must have the linearity property. So, hh(a * x1 + b * x2) = a * hh(x1) + b * hh(x2). TODO: further reading. 
+
+In general, elliptic curves and pairings are used to implement the hh function. But, this is outside the scope of this document. For more information, check out [Vitalik Buterin's blogpost](https://medium.com/@VitalikButerin/zk-snarks-under-the-hood-b33151a013f6) on it
+
+### Putting it all together
+
+Ok, very cool. Now, we can prove that we know s for some set of constraints without revealing anything about s! (Wowee)!! What does this mean? Imagine that you have 10 FDollars in your bank account. You want to prove to Bob that you have enough money to purchase a 5 FDollar burger. So, what is to be done?
+
+So, first, lets call you Alice.
+
+1. Alice creates something which ZCash (read more on them [here]()) calls a commitment. The commitment is basically, gg(Bob's public address + amount + rho + r). gg is some one way hash function and rho is a number unique to this commitment (more to come). r is a random number (called a nonce) which is useless but helps prevent against something called a replay attack (read more on [replay attacks]()).
+
+2. Then, Bob creates something called a Nullifier. This is just gg(Bob's private address + rho)
+<!-- https://z.cash/technology/zksnarks/ -->
+
+<!-- TODOs: -->
+<!-- Go through all the example todos and fill them in -->
+<!-- Finish up the putting it all together -->
+<!-- Example for knowledge coefficients -->
+<!-- Put in videos -->
+<!-- Clean up -->
