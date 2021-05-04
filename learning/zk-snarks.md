@@ -166,18 +166,18 @@ So, an example could be **s** = [1 2 79 4 48 52]. So x = 2, out = 79, tmp1 = 4, 
 ### R1CS to QAP
 
 Now we have to take the R1CS and convert it to QAP form (A Quadratic Assignment Problem).
-<details>
+<!-- <details>
   <summary>QAP Definition</summary>
   We have n facilities, each to be placed at one of n locations. 
 </details>
-<br />
+<br /> -->
 
 
 How you may ask? Lagrange interpolation!!
 
 <details>
   <summary>What's Lagrange interpolation</summary>
-  Check out [this video explaining it](https://www.youtube.com/watch?v=_zK_KhHW6og)!
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/_zK_KhHW6og" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </details>
 
 In short, the Interpolation theorem will be used. Given $n + 1$ points, a unique polynomial of degree $n$ can be constructed (using Lagrange interpolation) such that the $n + 1$ points are all contained within the $n^{th}$ degree polynomial
