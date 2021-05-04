@@ -3,10 +3,33 @@
 <!-- https://medium.com/@VitalikButerin/exploring-elliptic-curve-pairings-c73c1864e627 -->
 
 ## Preamble
+<!-- https://z.cash/technology/zksnarks/ -->
+ZK Snarks, or Zero-Knowledge Succinct Non-Interactive Argument of Knowledge, according to ZCash, "refers to a proof construction where one can prove possession of certain information, e.g. a secret key, without revealing that information, and without any interaction between the prover and verifier."
 
+Okay, so what does that mean? It basically is just saying that a prover can convince a verifier that the prover has some information. This information is also never revealed to the verifier.
+
+In the real world, this can be used to prove the validity of a transaction. So, Alice could prove to Bob that she has the funds to pay for a shiny new Tesla without ever revealing to Bob how much money she has or any other personal information. In fact, this how [ZCash](https://z.cash/), a private, confidential blockchain, works.
+
+ZK Snarks are also being used for a host of other applications in the block chain world, like solving scalability problems, privacy on chain, and more!
+
+## Outline
+The chapter will be broken up into a few different sections:
+
+1. [Transforming the input](#transforming-the-input)
+   - Flattening
+   - R1CS
+   - QAP
+   - Bringing it together
+2. [Hiding and cryptography]()
+   - One way functions
+   - Knowledge of coefficients
+   - Bringing it together
+3. [In the wild](#usage-in-the-wild)
+   - Snarky and O(1) labs
+4. [Check your understanding](#check-your-understanding)
 
 ## Transforming the input
-### Code to polynomials
+### We start with a polynomial
 Fun fact! Polynomials can express arbitrary computation and data.
 <details>
   <summary>Polynomial definition</summary>
@@ -202,7 +225,7 @@ Using Lagrange interpolation, we find that $A_0(i)=3.5 * (x - 2) * (x - 1) * x =
 
 Lets represent it as a vector instead with coefficients in ascending order [0 7 -10.5 3.5]
 
-Now, lets do the same for all equations, this gives us the following set of vectors representing each polynomial
+Now, lets do the same for all the equations of A, this gives us the following set of vectors representing each polynomial
 
 $A(i)$ = [
   [0 7 -10.5 3.5]
@@ -213,26 +236,16 @@ $A(i)$ = [
   <br/>
   [0 0.33 -0.5 0.166]
 ]
-
-$B(i)$ = [
-  <br/>
-  <br/>
-  <br/>
-]
-
-$C(i)$ = [
-  <br/>
-  <br/>
-  <br/>
-]
-
 ### Checking s with QAP
 Remember our solution vector s? Lets use it again.
-So, take $s . A(i) * s . B(i) - s . C(i)$. Say you have n gates. If for i = 0 to n - 1, $s . A(i) * s . B(i) - s . C(i)$ = 0, then s must satisfy all the constraints! Don't believe me?? Let's do a quick proof
+So, take $s . A(i) * s . B(i) - s . C(i)$. Say you have n gates. If for i = 0 to n - 1, $s . A(i) * s . B(i) - s . C(i)$ = 0, then s must satisfy all the constraints! Don't believe me? Let's do a quick proof
 
-(-->) Let s satisfy the constraints and let i be from 0 to n - 1. 
-Then, $s . A(i) * s . B(i) - s . C(i) =$ <br />
-$s . A(i) * s . B(i) - s . C(i) =$  
+<!-- (->) Let s satisfy the constraints and let i be from 0 to n - 1. 
+Then, $s . A(i) * s . B(i) - s . C(i)$ <br />
+$s . A(i) * s . B(i) = s . C(i)$  
+Notice that A(i) gives the coefficient for the first term in the ith constraint formula. The same for B(i) and C(i).
+So, a . A(i) * b . A(i) = c . C(i),
+then, the above formula implies that  -->
 <!-- TODO: -->
 <br />
 <br />
@@ -280,7 +293,6 @@ In the setup, a random point P is chosen and then discarded forever (its called 
 ### Knowledge of coefficient
 A quick reality check: A', B', C', and hh(H(P)) are just numbers. So, we do not have a guarantee that A', B', C', and hh(H(P)) were calculated using the same constraints and **s**. This is where something called the knowledge of coefficient comes in.
 
-<!-- TODO: missing something -->
 Let A'(i) = s . A(i) <br/>
 Let B'(i) = s . B(i)
 <br />
@@ -334,16 +346,38 @@ Then, the verifier does the following:
 
 Wow! If all the checks hold for multiple P values, then the verifier can be probabilistically sure that the prover knows **s**. This is all done without revealing anything about **s**
 
-### Putting it all together
+## Usage in the wild
 
-Ok, very cool. Now, we can prove that we know s for some set of constraints without revealing anything about s! (Wowee)!! What does this mean? Imagine that you have 10 FDollars in your bank account. You want to prove to Bob that you have enough money to purchase a 5 FDollar burger. So, what is to be done?
+Today, there are many languages being put together to allow people to use ZK-Snarks in code. Many of these languages do not look like the procedural languages we are used to (like Python or C). Instead, they look more similar to HDLs (hardware description languages) SystemVerilog.
 
-So, first, lets call you Alice.
+<!-- https://o1-labs.github.io/snarky/ -->
+Let's look at an example from O1 Labs (a very cool company using ZK-Snarks to create a blockchain. P.S. [here is a talk](https://www.youtube.com/watch?v=gVOlQIY7_IE) that CMU Blockchain Group did with them)
 
-1. Alice creates something which ZCash (read more on them [here]()) calls a commitment. The commitment is basically, gg(Bob's public address + amount + rho + r). gg is some one way hash function and rho is a number unique to this commitment (more to come). r is a random number (called a nonce) which is useless but helps prevent against something called a replay attack (read more on [replay attacks]()).
+This is a language called Snarky, it takes much inspiration from functional programming (O(1) lab founders are CMU alumns)
+```
+module M = Snarky.Snark.Run.Make(Backends.Mnt4.Default);
+open M;
 
-2. Then, Bob creates something called a Nullifier. This is just gg(Bob's private address + rho)
-<!-- https://z.cash/technology/zksnarks/ -->
+// Compute division by guessing the result and checking with a
+// multiplication
+let div = (x, y) => {
+  // Non-deterministically choose a result
+  let z =
+    exists(Field.typ, ~compute= () => {
+      Field.Constant.Infix.(
+        read_var(x) / read_var(y)) // How to actually compute the result
+    });
+
+  assert_r1cs(z, y, x); // assert (z * y = x), so the result is correct
+  z;
+};
+```
+So what's going on here? 
+First, the above code builds both the program necessary for the prover and the verifier.
+
+Lets say you have Alice and Bob. Alice wants to prove that she knows $x / y$. Notice the `assert_r1cs(z, y, x)`, this signals that x = z * y is a gate. This signals to Snarky's compiler to create a series of R1CS constraints (which later get changed in QAP). Then, when Alice calls div(10, 5), the function returns 2. Then, Bob can verify that Alice indeed knows 10 / 5 by asking Alice to send over $A'(i), B'(i), C'(i), A_k(i), B_k(i), C_k(i)$, and $H(i)$ we discussed above.
+
+Woh, this is kinda cool. We just proved computation!
 
 <!-- TODOs: -->
 <!-- Go through all the example todos and fill them in -->
