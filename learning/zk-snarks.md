@@ -20,7 +20,7 @@ The chapter will be broken up into a few different sections:
    - R1CS
    - QAP
    - Bringing it together
-2. [Hiding and cryptography]()
+2. [Hiding and cryptography](#hiding,-cryptography-and-making-this-a-reality)
    - One way functions
    - Knowledge of coefficients
    - Bringing it together
@@ -256,7 +256,6 @@ Let H(i) = t(i) / Z(i).
 
 
 ### Reality check, why are we doing this?
-<!-- TODO: unsure -->
 Okay, we can prove computation now! Imagine that you are given a set a polynomial, Y(x), you can then turn that polynomial into R1CS constraints and then into QAP form giving, A(i), B(i), C(i). Now, if you can provide t(i) and an h(i) for some x, then a verifier could check that h(i) = t(i) / Z(i). Wait, it feels like a prover could fake a proof though? Well yeah, and to get around this, we will need some cryptography.
 
 ## Hiding, cryptography and making this a reality
@@ -379,11 +378,12 @@ Lets say you have Alice and Bob. Alice wants to prove that she knows $x / y$. No
 
 Woh, this is kinda cool. We just proved computation!
 
-<!-- TODOs: -->
-<!-- Go through all the example todos and fill them in -->
-<!-- Finish up the putting it all together -->
-<!-- Example for knowledge coefficients -->
-<!-- Put in videos -->
-<!-- Clean up -->
-
+<!-- TODO: answers? -->
 ## Check your understanding
+1. In your own words, what is a ZK-Snark?
+2. Given $~out = x^4 + 3x^2 + 10x - 21$, flatten the polynomial, then turn it into a set of vectors in R1CS. For extra spice, convert it into QAP form
+3. Say I want to check that you know some c = a + b. You tell me a, b, and hh(c). How can I verify that you know c?
+4. Now, say I want to check that you know some c = a + b. You tell me hh(a), hh(b), hh(c), and hh(a + b). How can I verify that you know c?
+5. Describe how Bob can use the idea of a Knowledge of Coefficient and hidings to check that Alice knows some z which equals x * y.
+6. Lets say you have an account which everyone agrees starts with 100 dollars. Now you go out and, in secret, buy some toothpaste, jeans, and scissors all for 25 dollars. Describe how you could use a ZK-Snark to prove to Alice that you spent 25 dollars without showing anybody receipts or the items you bought?
+7. If you can have a money system where everything is completely private, what could become of our public/ political system? (Just think of this, taxation would be entirely reliant on everyone honestly reporting their earnings. And, if someone does not, no one would be able to tell that this person did not report some income).
