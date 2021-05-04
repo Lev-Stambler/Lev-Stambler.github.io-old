@@ -5,7 +5,7 @@
 ## Preamble
 
 
-## 2. Transforming the input
+## Transforming the input
 ### Code to polynomials
 Fun fact! Polynomials can express arbitrary computation and data.
 <details>
@@ -30,7 +30,7 @@ Take a second to understand the above example. We will be coming back to this ex
 
 <details>
   <summary>Nerd alert, optimization</summary>
-  A very cool field of research is optimizing to minimize the number of logic gates needed to express a polynomial. Sure, the above polynomial looks simple, but imagine a polynomial with TODO: number of terms. Then try optimizing that!
+  A very cool field of research is optimizing to minimize the number of logic gates needed to express a polynomial. Sure, the above polynomial looks simple, but imagine a polynomial with 1,000,000  terms. Then try optimizing that!
   <br />
   <br />
 > An exercise to the reader: prove that the decision problem associated with optimizing the unrolling is NP Hard 
@@ -43,7 +43,7 @@ R1CS, or rank 1 constraint systems, are a group of three integer vectors, call t
 
 
 <details><summary>Why the ~one?</summary>
-TODO:
+  The one will later be used to help with performing addition of constants. Like the + 27 in our example above.
 </details>
 <br />
 
@@ -157,7 +157,6 @@ How you may ask? Lagrange interpolation!!
   Check out [this video explaining it](https://www.youtube.com/watch?v=_zK_KhHW6og)!
 </details>
 
-<!-- TODO: thm name -->
 In short, the Interpolation theorem will be used. Given $n + 1$ points, a unique polynomial of degree $n$ can be constructed (using Lagrange interpolation) such that the $n + 1$ points are all contained within the $n^{th}$ degree polynomial
 
 Recall the following set of vectors.
@@ -240,7 +239,7 @@ $s . A(i) * s . B(i) - s . C(i) =$
 
 Let t(i) = $s . A(i) * s . B(i) - s . C(i)$. In a real Snark, we may have 100s, 1,000s, or 1,000,000s of gates. So, we are not going to check t(i) for all possible values (ZCash currently supports up to about 2 million possible i's)! What do we do instead? We take some polynomial Z, and check if t evenly divides Z. (i.e. there is no remainder). We define Z(i) = i * (i - 1) * (i - 3) ... (i - (n - 1)). Basically, Z(i) is zero for all 0 to n - 1.
 
-Let h(i) = t(i) / Z(i).
+Let H(i) = t(i) / Z(i).
 
 
 ### Reality check, why are we doing this?
@@ -250,15 +249,15 @@ Okay, we can prove computation now! Imagine that you are given a set a polynomia
 ## Hiding, cryptography and making this a reality
 Take hh(X), let hh be a one way function. Also, let say that hh(X) supports addition and multiplication. So, hh(a * X + b * Y) = a * hh(X) + b * hh(Z).
 
-Now, take R = hh(t(P)) = hh(A(P) * B(P) - C(P)) for some point p. Then, R / hh(Z(P)) = hh(H(P)). So, if we can provide some hh(H(P)) and hh(t(P)) for a set of points which equal R / hh(Z(P)) we can show that we know an H(P) and a t(P) which satisfy the above division. This can all be done without revealing anything about H(P) or t(P). (remember hh hides the values!).
+Now, take R = hh(t(P)) = hh(s . A(P) * s . B(P) - s . C(P)) for some point p. Then, R / hh(Z(P)) = hh(H(P)). So, if we can provide some H'=hh(H(P)) and A'=hh(s . A(P)), B'=hh(s . B(P)), and C'=hh(s . C(P)) for a set of points which satisfy A' * B' - C' = H' * hh(Z(P)), show that we know an H(P) and a s . A(P), s . B(P), and s . C(P) which satisfy the above equation. This can all be done without revealing anything about H(P) or s. (remember hh hides the values!).
 
-Here is the thing though, if the prover knows what P is, the prover can just fake an H(P) and t(P) which satisfies the constraints only for that one point. So, the prover can't know what P is, no one can. 
+Here is the thing though, if the prover knows what P is, the prover can just fake an H(P) and s which satisfies the constraints only for that one point. So, the prover can't know what P is, no one can. 
 
-> Wait, then how can the prover calculate hh(H(P))?
+> Wait, then how can the prover calculate hh(H(P)) if the prover does not know P?
 >
 > Say $H(i) = i^3 + 10i + 2$. Then, $hh(H(i)) = hh(i)^3 + 10 * hh(i) + 2 * hh(1)$. So, if you know $hh(1), hh(i), hh(i^2), hh(i^3)$, you can find $hh(H(i))$ without ever knowing $i$. So, if you know $hh(1), hh(P), hh(P^2), hh(P^n)$ where n is the degree of H, you can calculate hh(H(P)) without knowing P.
 
-This is where the concept of a trusted setup. A trusted setup is something that happens once when creating a prover system.
+This is where the concept of a trusted setup comes in. A trusted setup is something that happens once when creating a prover system.
 In the setup, a random point P is chosen and then discarded forever (its called toxic waste). What is kept though is the following calculations: hh(1), hh(P), hh($P^2$), ..., hh($P^{n - 1}$) where n is the total number of constraints a system wants to support. As previously mentioned, this number goes up to about 2 million in ZCash's trusted setup. These values are made publicly available to all. If anyone was to ever find out the P value, __the entire ZK-Snark system becomes insecure__ as mentioned above. Check out Zk-Starks for an alternative which do not require a trusted setup.
 
 <details>
@@ -267,14 +266,27 @@ In the setup, a random point P is chosen and then discarded forever (its called 
 </details>
 <br />
 
+> ### An aside, properties of hh
+> Not to get too involved with the hiding function, just know this.
+>
+> hh must have the linearity property. So, hh(a * x1 + b * x2) = hh(a) * hh(x1) + hh(b) * hh(x2).
+>
+> hh usually maps some values into a different Field (i.e. not the integers or real numbers)
+>
+> With the notation used above (sometimes exponentiation is used instead of *), we assume that Division is a hard problem
+>
+> In general, elliptic curves and pairings are used to implement the hh function. But, this is outside the scope of this document. For more information, check out [Vitalik Buterin's blogpost](https://medium.com/@VitalikButerin/zk-snarks-under-the-hood-b33151a013f6) on it
+
 ### Knowledge of coefficient
+A quick reality check: A', B', C', and hh(H(P)) are just numbers. So, we do not have a guarantee that A', B', C', and hh(H(P)) were calculated using the same constraints and **s**. This is where something called the knowledge of coefficient comes in.
+
 <!-- TODO: missing something -->
-Let A'(i) = s * A(i) <br/>
-Let B'(i) = s * B(i)
+Let A'(i) = s . A(i) <br/>
+Let B'(i) = s . B(i)
 <br />
-Let C'(i) = s * C(i)
+Let C'(i) = s . C(i)
 <br />
-Let $K'(i)$ = s * [$K_{0}(i)$ $K_{1}(i)$ ... $K_{n - 1}(i)$] where each $K_k(i)$ = $A_k(i) + B_k(i) + C_k(i)$.
+Let $K'(i) = s . [K_{0}(i) K_{1}(i) ... K_{n - 1}(i)]$ where each $K_k(i) = A_k(i) + B_k(i) + C_k(i)$.
 
 
 And, let K'(i) = A'(i) + B'(i) + C'(i)
@@ -290,35 +302,37 @@ Then, for some F, R where hh(F) = hh(u * R). So then for some q:
 
 Then, if you only know hh(B) and hh(P), the only way to get hh(F) and hh(R) is to multiply hh(B) * q and hh(P) * q. 
 
-Lets come back to A'(P). Let Y1 = hh(A'(P)) and Y2 = hh (u * A'(P)). Then, if Y2 = hh(u) * Y1, you know that the same A'(P) was indeed used in calculating both Y1 and Y2. Notice that there is nothing revealed about A'(P) in this calculation!
+Lets come back to A'(P). Let Y1 = hh(A'(P)) and $Y2 = hh (u * A'(P)) = hh(u * s_0 * A_0(i)) + hh(u * s_1 * A_1(i)) + ... + hh(u * s_{n - 1} * A{n - 1}(i))))$. Then, if Y2 = hh(u) * Y1, you know that the A'(P) is indeed made from a linear combination of all the $A_k$.
+<!-- was indeed used in calculating both Y1 and Y2. Notice that there is nothing revealed about A'(P) in this calculation! -->
 
 > Proof: Let A'(P) used to calculate Y1 be X and A'(P) used to calculate Y2 be Z. AFSOC, that you could have Y2 = hh(u) * Y1 where X does not equal Z.
+>
+> Then, $hh(u) * Y1 = hh(u) * hh(A'(P)) = hh(u) * (hh(s_0 * A_0(i)) + hh(s_1 * A_1(i) + ...)) = Y2$
+> Thus a contradiction is reached.
 
-> Then, Y2=hh(u * Z) = hh(X) * hh(u) = hh(u * X). Thus a contradiction is reached.
+So now what? You can use the above fact to show that $A'(P)$ was made from a linear combination of $A_k(P)$, $B'(P)$ was made from a linear combination of $B_k(P)$, and $C'(P)$ was made from a linear combination of $C_k(P)$.
 
-Take $Y = hh(K'(i)) = hh(s * A(i) + s * B(i) + s * C(i))$ and $Y_0$ = $hh(s_0 * K_0)$, $Y_1 = hh(s_{1} * K_1)$, ..., $Y_{n - 1} = (s_{n - 1} * K_{n - 1})$. 
+Then we can also prove that $K'(P) = s_0 * K_0(P) + s_1 * K_1(P) + ... + s_{n - 1}*K_{n-1}(P) = A'(P) + B'(P) + C'(P)$. What does this tell us? Well this shows us that the **s** used in calculating A', B', C', and K' is the very same.
 
-So now what? You can use the above fact to prove that if $Y$ = $Y_0$ + $Y_1$ + ... + $Y_{n - 1}$, then the same coefficients $s_1, s_2, ..., s_{n -1}$ were used in calculating both $K'(i)$ and all the $Y_k$! So, all the same **s** was used in calculating all the $A'(i), B'(i)$, and $C'(i)$. So, what does this mean? This means that if $Y$ = $Y_0$ + $Y_1$ + ... + $Y_{n - 1}$, then the prover actually knows an **s** which satisfies the equations!
+> Proof: observe that $K'(P) = s_0 * (A_0(P) + B_0(P) + C_0(P)) + ...$ and that equals $A'(P) + B'(P) + C'(P) = s_0 * A_0(P) + s_0 * B_0(P) + s_0 * C_0(P)...$
+> Then, if $hh(u * s_0 * A_0(P)) + hh(u * s_0 * B_0(P)) + hh(u * s+0 * C_0(P))... \neq hh(u) * hh(K'(P))$, then a different linear combination of terms were used in constructing $K'(P)$ as from $A'(P)$,$B'(P)$, and $C'(P)$.
+
+Ok, now remember we defined H(i) to be (A'(i) * B'(i) - C'(i)) / Z(i).
+
+So now what? If you know that A'(P), B'(P), and C'(P) all use the same **s**, that they indeed are a linear combination of restraints $A_k(P), B_k(P)$, and $C_k(P)$ respectively, and that A'(P) * B'(P) - C'(P) = Z(P) * H(P), then you show that you know an **s** which satisfies the restraints without ever revealing what **s** is!
+
+> Proof: AFSOC that the prover does not know s but the above facts are true. Then, A'(P), B'(P), and C'(P) are calculated from the same s' which does not equal s. A'(P), B'(P), and C'(P) are also calculated from a linear combination of constraints on A, B, and C respectively. Then, there exits some $i \in [0, ..., n -1]$ such that $A'(i) * B'(i) - C'(i) \neq 0$ because s' does not satisfy the constraints. And look, Z(i) * H(i) must equal to zero by definition of i! This is a contradiction because $A'(P) * B'(P) - C'(P) \neq Z(P) * H(P)$. Thus the prover knows s!
 
 ### Bringing it together, a verifier and prover
-So, in order for a prover to show that they know **s** which satisfies a public set of constraints in the form $A(i), B(i), C(i)$. The prover must provide the hidings of $A'(i), B'(i), C'(i)$, and $h(i)$ to the verifier. (remember we defined h(i) to be (A'(i) * B'(i) - C'(i)) / Z(i))
+So, in order for a prover to show that they know **s** which satisfies a public set of constraints in the form $A(i), B(i), C(i)$. The prover must provide the hidings of $A'(i), B'(i), C'(i), A_k(i), B_k(i), C_k(i)$, and $H(i)$ to the verifier. 
 
 Then, the verifier does the following:
 
 1. The verifier creates custom verification key, lets call it $u$. This $u$ cannot be known by the prover ahead of time
-2. Then, the verifier can use $u$ to check that the same **s** was used to calculate A'(i), B'(i), and C'(i) (as described in the Knowledge of coefficient section)
-3. Finally, the verifier checks that A'(i)*B'(i) - C'(i) = Z(i) * h(i)
+2. Then, the verifier can use $u$ to check that the same **s** was used to calculate A'(P), B'(P), and C'(P) (as described in the Knowledge of coefficient section) and that A'(P), B'(P), C'(P) were all calculated using $A_k(i), B_k(P), and C_k(P)$ respectively.
+3. Finally, the verifier checks that A'(P)*B'(P) - C'(P) = Z(P) * H(P)
 
-Wow! If all the checks hold, then the verifier can be sure that the prover knows **s**. This is all done without revealing anything about **s**
-
-<!-- TODO: Not convinced? Lets look at a small example -->
-
-> ### An aside, properties of hh
-> Not to get to involved with the hiding function, just know this.
->
-> hh must have the linearity property. So, hh(a * x1 + b * x2) = a * hh(x1) + b * hh(x2).
->
-> In general, elliptic curves and pairings are used to implement the hh function. But, this is outside the scope of this document. For more information, check out [Vitalik Buterin's blogpost](https://medium.com/@VitalikButerin/zk-snarks-under-the-hood-b33151a013f6) on it
+Wow! If all the checks hold for multiple P values, then the verifier can be probabilistically sure that the prover knows **s**. This is all done without revealing anything about **s**
 
 ### Putting it all together
 
