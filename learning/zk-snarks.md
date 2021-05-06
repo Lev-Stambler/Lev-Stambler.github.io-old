@@ -1,9 +1,6 @@
 # ZK Snarks
-<!-- https://medium.com/@VitalikButerin/quadratic-arithmetic-programs-from-zero-to-hero-f6d558cea649 -->
-<!-- https://medium.com/@VitalikButerin/exploring-elliptic-curve-pairings-c73c1864e627 -->
 
 ## Preamble
-<!-- https://z.cash/technology/zksnarks/ -->
 ZK Snarks, or Zero-Knowledge Succinct Non-Interactive Argument of Knowledge, according to ZCash, "refers to a proof construction where one can prove possession of certain information, e.g. a secret key, without revealing that information, and without any interaction between the prover and verifier."
 
 Okay, so what does that mean? It basically is just saying that a prover can convince a verifier that the prover has some information. This information is also never revealed to the verifier.
@@ -15,25 +12,31 @@ ZK Snarks are also being used for a host of other applications in the block chai
 ## Outline
 The chapter will be broken up into a few different sections:
 
-1. [Transforming the input](#transforming-the-input)
-   - Flattening
-   - R1CS
-   - QAP
-   - Bringing it together
-2. [Hiding and cryptography](#hiding,-cryptography-and-making-this-a-reality)
-   - One way functions
-   - Knowledge of coefficients
-   - Bringing it together
-3. [In the wild](#usage-in-the-wild)
-   - Snarky and O(1) labs
-4. [Check your understanding](#check-your-understanding)
+- [ZK Snarks](#zk-snarks)
+  - [Preamble](#preamble)
+  - [Outline](#outline)
+  - [Transforming the input](#transforming-the-input)
+    - [We start with a polynomial](#we-start-with-a-polynomial)
+    - [Flattening/ unrolling](#flattening-unrolling)
+        - [Take the following polynomial:](#take-the-following-polynomial)
+    - [Polynomials to R1CS](#polynomials-to-r1cs)
+    - [Creating a witness](#creating-a-witness)
+    - [R1CS to QAP](#r1cs-to-qap)
+    - [Checking s with QAP](#checking-s-with-qap)
+    - [Reality check, why are we doing this?](#reality-check-why-are-we-doing-this)
+  - [Hiding, cryptography and making this a reality](#hiding-cryptography-and-making-this-a-reality)
+    - [Knowledge of coefficient](#knowledge-of-coefficient)
+    - [Bringing it together, a verifier and prover](#bringing-it-together-a-verifier-and-prover)
+  - [Usage in the wild](#usage-in-the-wild)
+  - [Check your understanding](#check-your-understanding)
+  - [Sources](#sources)
+  - [Contact Me!](#contact-me)
 
 ## Transforming the input
 ### We start with a polynomial
 Fun fact! Polynomials can express arbitrary computation and data.
 <details>
   <summary>Polynomial definition</summary>
-  <!-- https://byjus.com/maths/polynomial/ -->
   <br />
   According to BYJU, polynomials can be defined as:
   Polynomials are algebraic expressions that consist of variables and coefficients. Variables are also sometimes called indeterminate. We can perform arithmetic operations such as addition, subtraction, multiplication and also positive integer exponents for polynomial expressions but not division by variable. 
@@ -349,7 +352,6 @@ Wow! If all the checks hold for multiple P values, then the verifier can be prob
 
 Today, there are many languages being put together to allow people to use ZK-Snarks in code. Many of these languages do not look like the procedural languages we are used to (like Python or C). Instead, they look more similar to HDLs (hardware description languages) SystemVerilog.
 
-<!-- https://o1-labs.github.io/snarky/ -->
 Let's look at an example from O1 Labs (a very cool company using ZK-Snarks to create a blockchain. P.S. [here is a talk](https://www.youtube.com/watch?v=gVOlQIY7_IE) that CMU Blockchain Group did with them)
 
 This is a language called Snarky, it takes much inspiration from functional programming (O(1) lab founders are CMU alumns)
@@ -422,3 +424,20 @@ Woh, this is kinda cool. We just proved computation!
    </ol>
 </details>
 <br />
+
+## Sources
+A big thanks to Vitalik Buterin's posts on [QAP](https://medium.com/@VitalikButerin/quadratic-arithmetic-programs-from-zero-to-hero-f6d558cea649), [Elliptic Curves](https://medium.com/@VitalikButerin/exploring-elliptic-curve-pairings-c73c1864e627), and [ZK-Snarks](https://medium.com/@VitalikButerin/zk-snarks-under-the-hood-b33151a013f6) for helping me to understand the concepts.
+
+The [Zero Knowledge Blog](https://www.zeroknowledgeblog.com/index.php/), by Maurizio Binello, has also been indispensible in learning about ZK Snarks
+
+Other references:
+- [ZCash's Writeup on ZK Snarks](https://z.cash/technology/zksnarks/)
+- [Information on Polynomials](https://www.zeroknowledgeblog.com/index.php/)
+- [Video on Lagrange Interpolation](https://byjus.com/maths/polynomial/)
+- [O(1)'s Snarky Documentation](https://o1-labs.github.io/snarky/)
+- [CMU Blockchain + BAF + MINA Talk](https://www.youtube.com/embed/_zK_KhHW6og)
+  
+## Contact Me!
+If any of this stuff is interesting to you (and you are a CMU student), please reach out to CMU Blockchain Group and join the club!
+
+If you are interested in this stuff and not a CMU student, have no fear. Apply to become a member of BAF (The Blockchain Acceleration Foundation). Find out more information on [the site](https://www.blockchainacceleration.org/)

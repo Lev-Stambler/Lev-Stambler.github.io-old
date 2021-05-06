@@ -676,45 +676,51 @@ hue-6-2: #e6c07b
     </head>
     <body class="vscode-body vscode-light">
         <h1 id="zk-snarks">ZK Snarks</h1>
-<!-- https://medium.com/@VitalikButerin/quadratic-arithmetic-programs-from-zero-to-hero-f6d558cea649 -->
-<!-- https://medium.com/@VitalikButerin/exploring-elliptic-curve-pairings-c73c1864e627 -->
 <h2 id="preamble">Preamble</h2>
-<!-- https://z.cash/technology/zksnarks/ -->
 <p>ZK Snarks, or Zero-Knowledge Succinct Non-Interactive Argument of Knowledge, according to ZCash, &quot;refers to a proof construction where one can prove possession of certain information, e.g. a secret key, without revealing that information, and without any interaction between the prover and verifier.&quot;</p>
 <p>Okay, so what does that mean? It basically is just saying that a prover can convince a verifier that the prover has some information. This information is also never revealed to the verifier.</p>
 <p>In the real world, this can be used to prove the validity of a transaction. So, Alice could prove to Bob that she has the funds to pay for a shiny new Tesla without ever revealing to Bob how much money she has or any other personal information. In fact, this how <a href="https://z.cash/">ZCash</a>, a private, confidential blockchain, works.</p>
 <p>ZK Snarks are also being used for a host of other applications in the block chain world, like solving scalability problems, privacy on chain, and more!</p>
 <h2 id="outline">Outline</h2>
 <p>The chapter will be broken up into a few different sections:</p>
-<ol>
+<ul>
+<li><a href="#zk-snarks">ZK Snarks</a>
+<ul>
+<li><a href="#preamble">Preamble</a></li>
+<li><a href="#outline">Outline</a></li>
 <li><a href="#transforming-the-input">Transforming the input</a>
 <ul>
-<li>Flattening</li>
-<li>R1CS</li>
-<li>QAP</li>
-<li>Bringing it together</li>
-</ul>
-</li>
-<li><a href="#hiding,-cryptography-and-making-this-a-reality">Hiding and cryptography</a>
+<li><a href="#we-start-with-a-polynomial">We start with a polynomial</a></li>
+<li><a href="#flattening-unrolling">Flattening/ unrolling</a>
 <ul>
-<li>One way functions</li>
-<li>Knowledge of coefficients</li>
-<li>Bringing it together</li>
+<li><a href="#take-the-following-polynomial">Take the following polynomial:</a></li>
 </ul>
 </li>
-<li><a href="#usage-in-the-wild">In the wild</a>
+<li><a href="#polynomials-to-r1cs">Polynomials to R1CS</a></li>
+<li><a href="#creating-a-witness">Creating a witness</a></li>
+<li><a href="#r1cs-to-qap">R1CS to QAP</a></li>
+<li><a href="#checking-s-with-qap">Checking s with QAP</a></li>
+<li><a href="#reality-check-why-are-we-doing-this">Reality check, why are we doing this?</a></li>
+</ul>
+</li>
+<li><a href="#hiding-cryptography-and-making-this-a-reality">Hiding, cryptography and making this a reality</a>
 <ul>
-<li>Snarky and O(1) labs</li>
+<li><a href="#knowledge-of-coefficient">Knowledge of coefficient</a></li>
+<li><a href="#bringing-it-together-a-verifier-and-prover">Bringing it together, a verifier and prover</a></li>
 </ul>
 </li>
+<li><a href="#usage-in-the-wild">Usage in the wild</a></li>
 <li><a href="#check-your-understanding">Check your understanding</a></li>
-</ol>
+<li><a href="#sources">Sources</a></li>
+<li><a href="#contact-me">Contact Me!</a></li>
+</ul>
+</li>
+</ul>
 <h2 id="transforming-the-input">Transforming the input</h2>
 <h3 id="we-start-with-a-polynomial">We start with a polynomial</h3>
 <p>Fun fact! Polynomials can express arbitrary computation and data.</p>
 <details>
   <summary>Polynomial definition</summary>
-  <!-- https://byjus.com/maths/polynomial/ -->
   <br />
   According to BYJU, polynomials can be defined as:
   Polynomials are algebraic expressions that consist of variables and coefficients. Variables are also sometimes called indeterminate. We can perform arithmetic operations such as addition, subtraction, multiplication and also positive integer exponents for polynomial expressions but not division by variable. 
@@ -963,7 +969,6 @@ Then, if <span class="katex"><span class="katex-mathml"><math xmlns="http://www.
 <p>Wow! If all the checks hold for multiple P values, then the verifier can be probabilistically sure that the prover knows <strong>s</strong>. This is all done without revealing anything about <strong>s</strong></p>
 <h2 id="usage-in-the-wild">Usage in the wild</h2>
 <p>Today, there are many languages being put together to allow people to use ZK-Snarks in code. Many of these languages do not look like the procedural languages we are used to (like Python or C). Instead, they look more similar to HDLs (hardware description languages) SystemVerilog.</p>
-<!-- https://o1-labs.github.io/snarky/ -->
 <p>Let's look at an example from O1 Labs (a very cool company using ZK-Snarks to create a blockchain. P.S. <a href="https://www.youtube.com/watch?v=gVOlQIY7_IE">here is a talk</a> that CMU Blockchain Group did with them)</p>
 <p>This is a language called Snarky, it takes much inspiration from functional programming (O(1) lab founders are CMU alumns)</p>
 <pre><code><code><div>module M = Snarky.Snark.Run.Make(Backends.Mnt4.Default);
@@ -990,14 +995,62 @@ First, the above code builds both the program necessary for the prover and the v
 <!-- TODO: answers? -->
 <h2 id="check-your-understanding">Check your understanding</h2>
 <ol>
-<li>In your own words, what is a ZK-Snark?</li>
+<li>In your own words, what is a ZK-Snark (just 1 to 2 sentences)?</li>
 <li>Given <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext> </mtext><mi>o</mi><mi>u</mi><mi>t</mi><mo>=</mo><msup><mi>x</mi><mn>4</mn></msup><mo>+</mo><mn>3</mn><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mn>10</mn><mi>x</mi><mo>−</mo><mn>21</mn></mrow><annotation encoding="application/x-tex">~out = x^4 + 3x^2 + 10x - 21</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.61508em;vertical-align:0em;"></span><span class="mspace nobreak"> </span><span class="mord mathdefault">o</span><span class="mord mathdefault">u</span><span class="mord mathdefault">t</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.897438em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.897438em;vertical-align:-0.08333em;"></span><span class="mord">3</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mord">0</span><span class="mord mathdefault">x</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">1</span></span></span></span>, flatten the polynomial, then turn it into a set of vectors in R1CS. For extra spice, convert it into QAP form</li>
 <li>Say I want to check that you know some c = a + b. You tell me a, b, and hh(c). How can I verify that you know c?</li>
 <li>Now, say I want to check that you know some c = a + b. You tell me hh(a), hh(b), hh(c), and hh(a + b). How can I verify that you know c?</li>
-<li>Describe how Bob can use the idea of a Knowledge of Coefficient and hidings to check that Alice knows some z which equals x * y.</li>
+<li>Describe how Bob can use the idea of a Knowledge of Coefficient and hidings to check that Alice knows some z which equals x + y. (Bob does not know x or y either!)</li>
 <li>Lets say you have an account which everyone agrees starts with 100 dollars. Now you go out and, in secret, buy some toothpaste, jeans, and scissors all for 25 dollars. Describe how you could use a ZK-Snark to prove to Alice that you spent 25 dollars without showing anybody receipts or the items you bought?</li>
 <li>If you can have a money system where everything is completely private, what could become of our public/ political system? (Just think of this, taxation would be entirely reliant on everyone honestly reporting their earnings. And, if someone does not, no one would be able to tell that this person did not report some income).</li>
 </ol>
+<details>
+  <summary>CYU Answers</summary>
+   <ol>
+    <li>A ZK Snark is a succinct (meaning bounded in size) proof that someone knows the answer to some computation without revealing what that answer is.</li>
+    <li>
+      tmp1 = x * x
+      <br /> 
+      tmp2 = tmp1 * tmp1
+      <br /> 
+      tmp3 = tmp2 + 3 * tmp1
+      <br /> 
+      tmp4 = tmp3 + 10x
+      <br /> 
+      ~out = tmp4 - 21
+      <br /> 
+    </li>
+    <li>
+      I can check that hh(a) + hh(b) is indeed the hh(c) you gave me! 
+    </li>
+    <li>
+      If hh(c) = hh(a) + hh(b) = hh(a + b) then I know that you are not lying.
+    </li>
+    <li>
+      If Alice provides Bob hh(x), hh(y), hh(z) and hh(u * x), hh(u * y), and hh(u * z) for some secret u Bob chooses, then Bob can check that hh(x) + hh(y) = hh(z). Then, Bob can check that hh(u * x) + hh(u * y) = hh(u * z). Now, Bob knows that hh(z) is the hidings of a linear combination of x and y. Bob can now be sure that Alice ain't a lier.
+    </li>
+    <li>
+      Let's say that each receipt had some secret values associated with it that are NP hard to compute and verifiable in polynomial time. In other words, each receipt could have some sort of public, private key pair. You could use ZK-Snarks then! Express the verification in terms of a R1CS constraints, then you can prove that you know the answer without revealing what the public key is or the private key! Dang, you just proved you spent 25 dollars without revealing what you bought or who you even are...
+    </li>
+    <li>
+      This is open ended! Let your imagination run wild. I can imagine a lot of chaos but a lot of upsides from this technology. For one, people could prove their identity (i.e. that they know their own Social Security Number) without having to reveal their SSN. Ain't that cool.
+    </li>
+   </ol>
+</details>
+<br />
+<h2 id="sources">Sources</h2>
+<p>A big thanks to Vitalik Buterin's posts on <a href="https://medium.com/@VitalikButerin/quadratic-arithmetic-programs-from-zero-to-hero-f6d558cea649">QAP</a>, <a href="https://medium.com/@VitalikButerin/exploring-elliptic-curve-pairings-c73c1864e627">Elliptic Curves</a>, and <a href="https://medium.com/@VitalikButerin/zk-snarks-under-the-hood-b33151a013f6">ZK-Snarks</a> for helping me to understand the concepts.</p>
+<p>The <a href="https://www.zeroknowledgeblog.com/index.php/">Zero Knowledge Blog</a>, by Maurizio Binello, has also been indispensible in learning about ZK Snarks</p>
+<p>Other references:</p>
+<ul>
+<li><a href="https://z.cash/technology/zksnarks/">ZCash's Writeup on ZK Snarks</a></li>
+<li><a href="https://www.zeroknowledgeblog.com/index.php/">Information on Polynomials</a></li>
+<li><a href="https://byjus.com/maths/polynomial/">Video on Lagrange Interpolation</a></li>
+<li><a href="https://o1-labs.github.io/snarky/">O(1)'s Snarky Documentation</a></li>
+<li><a href="https://www.youtube.com/embed/_zK_KhHW6og">CMU Blockchain + BAF + MINA Talk</a></li>
+</ul>
+<h2 id="contact-me">Contact Me!</h2>
+<p>If any of this stuff is interesting to you (and you are a CMU student), please reach out to CMU Blockchain Group and join the club!</p>
+<p>If you are interested in this stuff and not a CMU student, have no fear. Apply to become a member of BAF (The Blockchain Acceleration Foundation). Find out more information on <a href="https://www.blockchainacceleration.org/">the site</a></p>
 
     </body>
     </html>
