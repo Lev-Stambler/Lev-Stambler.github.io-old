@@ -380,10 +380,45 @@ Woh, this is kinda cool. We just proved computation!
 
 <!-- TODO: answers? -->
 ## Check your understanding
-1. In your own words, what is a ZK-Snark?
+1. In your own words, what is a ZK-Snark (just 1 to 2 sentences)?
 2. Given $~out = x^4 + 3x^2 + 10x - 21$, flatten the polynomial, then turn it into a set of vectors in R1CS. For extra spice, convert it into QAP form
 3. Say I want to check that you know some c = a + b. You tell me a, b, and hh(c). How can I verify that you know c?
 4. Now, say I want to check that you know some c = a + b. You tell me hh(a), hh(b), hh(c), and hh(a + b). How can I verify that you know c?
-5. Describe how Bob can use the idea of a Knowledge of Coefficient and hidings to check that Alice knows some z which equals x * y.
+5. Describe how Bob can use the idea of a Knowledge of Coefficient and hidings to check that Alice knows some z which equals x + y. (Bob does not know x or y either!)
 6. Lets say you have an account which everyone agrees starts with 100 dollars. Now you go out and, in secret, buy some toothpaste, jeans, and scissors all for 25 dollars. Describe how you could use a ZK-Snark to prove to Alice that you spent 25 dollars without showing anybody receipts or the items you bought?
 7. If you can have a money system where everything is completely private, what could become of our public/ political system? (Just think of this, taxation would be entirely reliant on everyone honestly reporting their earnings. And, if someone does not, no one would be able to tell that this person did not report some income).
+
+<details>
+  <summary>CYU Answers</summary>
+   <ol>
+    <li>A ZK Snark is a succinct (meaning bounded in size) proof that someone knows the answer to some computation without revealing what that answer is.</li>
+    <li>
+      tmp1 = x * x
+      <br /> 
+      tmp2 = tmp1 * tmp1
+      <br /> 
+      tmp3 = tmp2 + 3 * tmp1
+      <br /> 
+      tmp4 = tmp3 + 10x
+      <br /> 
+      ~out = tmp4 - 21
+      <br /> 
+    </li>
+    <li>
+      I can check that hh(a) + hh(b) is indeed the hh(c) you gave me! 
+    </li>
+    <li>
+      If hh(c) = hh(a) + hh(b) = hh(a + b) then I know that you are not lying.
+    </li>
+    <li>
+      If Alice provides Bob hh(x), hh(y), hh(z) and hh(u * x), hh(u * y), and hh(u * z) for some secret u Bob chooses, then Bob can check that hh(x) + hh(y) = hh(z). Then, Bob can check that hh(u * x) + hh(u * y) = hh(u * z). Now, Bob knows that hh(z) is the hidings of a linear combination of x and y. Bob can now be sure that Alice ain't a lier.
+    </li>
+    <li>
+      Let's say that each receipt had some secret values associated with it that are NP hard to compute and verifiable in polynomial time. In other words, each receipt could have some sort of public, private key pair. You could use ZK-Snarks then! Express the verification in terms of a R1CS constraints, then you can prove that you know the answer without revealing what the public key is or the private key! Dang, you just proved you spent 25 dollars without revealing what you bought or who you even are...
+    </li>
+    <li>
+      This is open ended! Let your imagination run wild. I can imagine a lot of chaos but a lot of upsides from this technology. For one, people could prove their identity (i.e. that they know their own Social Security Number) without having to reveal their SSN. Ain't that cool.
+    </li>
+   </ol>
+</details>
+<br />
